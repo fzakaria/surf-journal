@@ -1320,6 +1320,19 @@
     targets = [];
     version = "0.23.8";
   };
+  ruby-lsp-rails = {
+    dependencies = ["ruby-lsp"];
+    groups = ["development"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0y2yndya6jz5c8dfcz6311831hy76b5rwnk5f1gfv6xsi47dy909";
+      target = "ruby";
+      type = "gem";
+    };
+    targets = [];
+    version = "0.4.0";
+  };
   ruby-progressbar = {
     groups = ["default" "development" "test"];
     platforms = [];

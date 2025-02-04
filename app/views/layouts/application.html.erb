@@ -26,13 +26,26 @@
 
   <body class="header-layout">
     <header id="header">
-      <div class="container">
+      <div class="container flex justify-between">
         <h1 class="font-bold text-2xl">Surf Journal</h1>
+
+        <% if Current.user %>
+          <%= button_to "Logout", session_path,
+                      method: :delete,
+                      class: "btn btn--primary" %>
+        <% end %>
       </div>
     </header>
 
     <main id="main">
       <div class="container">
+        <% if alert.present? %>
+          <div popover class="flash" style="--flash-position: 5rem;" data-controller="element-removal" data-action="animationend->element-removal#remove" role="alert"><%= alert %></div>
+        <% end %>
+
+        <% if notice.present? %>
+          <div popover class="flash" style="--flash-position: 5rem;" data-controller="element-removal" data-action="animationend->element-removal#remove" role="alert"><%= notice %></div>
+        <% end %>
         <%= yield %>
       </div>
     </main>
