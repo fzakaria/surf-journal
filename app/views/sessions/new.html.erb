@@ -1,8 +1,18 @@
-<h1 class="font-bold text-4xl mbe-4">Sign in</h1>
 
-<%= form_with url: session_url, class: "flex flex-col gap" do |form| %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "input" %>
-  <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72, class: "input" %>
+<%= form_with url: session_url, class: "card flex flex-col gap" do |form| %>
+  <div class="flex flex-col gap-half">
+    <h3 class="font-semibold leading-none">Login</h3>
+    <p class="text-sm text-subtle">Enter your email & password below to login to your account.</p>
+  </div>
+ 
+  <div class="flex flex-col gap mb-2">
+    <div class="flex flex-col gap-half">
+      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "input" %>
+    </div>
+    <div class="flex flex-col gap-half">
+      <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72, class: "input" %>
+    </div>
+  </div>
 
   <div class="flex items-center gap">
     <%= form.submit "Sign in", class: "btn btn--primary" %>

@@ -1,22 +1,23 @@
-<h1 class="font-bold text-4xl mbe-4">Sign up</h1>
 
-<%= form_with model: @user, url: registration_url, class: "flex flex-col gap" do |form| %>
-    <div class="my-5">
-      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-    </div>
+<%= form_with url: session_url, class: "card flex flex-col gap" do |form| %>
+  <div class="flex flex-col gap-half">
+    <h3 class="font-semibold leading-none">Register</h3>
+    <p class="text-sm text-subtle">Enter your email & password below to create to your account.</p>
+  </div>
+   
+  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "input" %>
+  <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72, class: "input" %>
+  <%= form.password_field :password_confirmation, required: true, autocomplete: "current-password", placeholder: "Confirm your password", maxlength: 72, class: "input" %>
 
-    <div class="my-5">
-      <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-    </div>
+  <div class="flex gap">
+    <%= form.submit "Sign up", class: "btn btn--primary" %>
+    <%= link_to "Forgot password?", new_password_path, class: "text-m font-medium underline" %>
+  </div>
 
-    <div class="my-5">
-      <%= form.password_field :password_confirmation, required: true, autocomplete: "current-password", placeholder: "Confirm your password", maxlength: 72, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-    </div>
+<% end %>
 
-      <div class="flex gap">
-        <%= form.submit "Sign up", class: "btn btn--primary" %>
-        <%= link_to "Forgot password?", new_password_path, class: "text-m font-medium underline" %>
-      </div>
+<hr class="m-3"/>
 
-  <% end %>
+<div class="flex items-center gap justify-center">
+   <%= link_to "Login", new_session_path, class: "btn btn--primary" %>
 </div>

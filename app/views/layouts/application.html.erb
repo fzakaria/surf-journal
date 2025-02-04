@@ -27,17 +27,32 @@
   <body class="header-layout">
     <header id="header">
       <div class="container flex justify-between">
-        <h1 class="font-bold text-2xl">Surf Journal</h1>
+        <div class="flex items-center gap">
+          <%= link_to "#", class: "flex items-center gap mie-2" do %>
+            <h1 class="font-bold text-2xl">Surf Journal</h1>
+          <% end %>
+
+          <nav class="flex items-center gap text-sm text-subtle show@md" style="--column-gap: 1rem">
+            <%= link_to "Docs", "#", class: active_nav_class(root_path) %>
+            <%= link_to "Components", "#", class: active_nav_class("a") %>
+            <%= link_to "Blocks", "#", class: active_nav_class("a") %>
+            <%= link_to "Charts", "#", class: active_nav_class("a") %>
+            <%= link_to "Themes", "#", class: active_nav_class("a") %>
+            <%= link_to "Colors", "#", class: active_nav_class("a") %>
+          </nav>
+        </div>
 
         <% if Current.user %>
+        <div class="flex items-center gap">
           <%= button_to "Logout", session_path,
                       method: :delete,
                       class: "btn btn--primary" %>
+        </div>
         <% end %>
       </div>
     </header>
 
-    <main id="main">
+    <main id="main" class="centered-layout">
       <div class="container">
         <% if alert.present? %>
           <div popover class="flash" style="--flash-position: 5rem;" data-controller="element-removal" data-action="animationend->element-removal#remove" role="alert"><%= alert %></div>
