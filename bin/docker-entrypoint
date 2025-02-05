@@ -1,13 +1,14 @@
-#!/nix/store/gwgqdl0242ymlikq9s9s62gkp5cvyal3-bash-5.2p37/bin/bash -e
+#!/usr/bin/env bash
+set -e
 
-# Enable jemalloc for reduced memory usage and latency.
-if [ -z "${LD_PRELOAD+x}" ]; then
-    LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
-    export LD_PRELOAD
+# If LD_PRELOAD is set (non-empty), print it so we know what we're using.
+if [ -n "$LD_PRELOAD" ]; then
+    echo "Using LD_PRELOAD=$LD_PRELOAD"
 fi
 
 # If running the rails server then create or migrate existing database
-if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+# This supports ./bin/rais as well as /nix/store/*/bin/rails matching.
+if [[ "${@: -2:1}" == *"/bin/rails" ]] && [[ "${@: -1:1}" == "server" ]]; then
   ./bin/rails db:prepare
 fi
 

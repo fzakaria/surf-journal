@@ -26,33 +26,135 @@
           pkgs = nixpkgs.legacyPackages.${system};
           inherit system;
         });
-  in {
+  in rec {
     formatter = eachSystem ({pkgs, ...}: pkgs.alejandra);
 
-    devShells = eachSystem ({
-      pkgs,
-      system,
-    }: {
-      default = let
+    gemsets = eachSystem (
+      {pkgs, ...}: let
+        ruby = pkgs.ruby_3_4;
         rubyNix = ruby-nix.lib pkgs;
         gemset =
           if builtins.pathExists ./gemset.nix
           then import ./gemset.nix
           else {};
-        ruby = pkgs.ruby_3_4;
-        bundixcli = bundix.packages.${system}.default;
-        inherit
-          (rubyNix {
-            name = "surf-journal-gems";
-            inherit gemset ruby;
+      in (rubyNix
+        {
+          name = "surf-journal-gems";
+          inherit gemset ruby;
+        })
+    );
+
+    packages = eachSystem ({
+      pkgs,
+      system,
+    }: let
+      fs = pkgs.lib.fileset;
+    in rec {
+      default = pkgs.stdenv.mkDerivation {
+        name = "surf-journal";
+        version = "0.1.0";
+        src = fs.toSource {
+          root = ./.;
+          fileset =
+            fs.difference (fs.unions [
+              ./bin
+              ./app
+              ./config
+              ./db
+              ./lib
+              ./public
+              ./config.ru
+              ./Gemfile
+              ./Gemfile.lock
+              ./Rakefile
+            ]) (fs.unions [
+              (fs.maybeMissing ./config/master.key)
+            ]);
+        };
+        env = {
+          RAILS_ENV = "production";
+        };
+        buildInputs = with pkgs; [
+          gemsets.${system}.env
+          gemsets.${system}.ruby
+        ];
+        buildPhase = ''
+          patchShebangs --build ./bin
+
+          bundle exec bootsnap precompile --gemfile
+          # Precompile bootsnap code for faster boot times
+          bundle exec bootsnap precompile app/ lib/
+          # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+          SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+        '';
+        installPhase = ''
+          mkdir -p $out
+          cp -r . $out
+        '';
+      };
+
+      container = pkgs.dockerTools.buildImage {
+        name = "surf-journal";
+        runAsRoot = ''
+          # Expects this folder to exist for checking jemalloc
+          mkdir -p /usr/lib
+        '';
+        copyToRoot = with pkgs.dockerTools; [
+          (pkgs.buildEnv {
+            name = "image-root";
+            pathsToLink = ["/bin"];
+            paths = with pkgs; [
+              coreutils
+              findutils
+            ];
           })
-          env;
-      in
-        pkgs.mkShell {
+          # This provides the env utility at /usr/bin/env.
+          usrBinEnv
+          # This provides bashInteractive at /bin/sh.
+          binSh
+          # This sets up /etc/ssl/certs/ca-certificates.crt.
+          caCertificates
+          # Provides /etc/passwd and /etc/group that contain root and nobody.
+          # Useful when packaging binaries that insist on using nss to look up username/groups
+          fakeNss
+          # Everything seems to assume that the application is in the root lots of relative
+          # paths
+          default
+        ];
+        config = {
+          Env = [
+            "RAILS_ENV=production"
+            # Enable jemalloc for reduced memory usage and latency.
+            "LD_PRELOAD=${pkgs.jemalloc}/lib/libjemalloc.so"
+          ];
+          Cmd = ["./bin/thrust" "./bin/rails" "server"];
+          Entrypoint = ["${default}/bin/docker-entrypoint"];
+          ExposedPorts = {
+            "3000/tcp" = {};
+          };
+        };
+      };
+    });
+
+    apps = eachSystem ({system, ...}: {
+      default = {
+        type = "app";
+        program = "${packages.${system}.default}/bin/dev";
+      };
+    });
+
+    devShells = eachSystem ({
+      pkgs,
+      system,
+    }: {
+      default = with pkgs;
+        mkShell {
           buildInputs = [
-            pkgs.ruby_3_4
-            env
-            bundixcli
+            bundix.packages.${system}.default
+            flyctl
+          ];
+          inputsFrom = [
+            packages.${system}.default
           ];
         };
     });

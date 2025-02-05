@@ -1,0 +1,9 @@
+app = "surf-journal"
+primary_region = "sjc"
+
+[env]
+  DATABASE_URL = "sqlite3:///mnt/volume/production.sqlite3"
+
+[mounts]
+  source = "sqlite3_volume"
+  destination = "/mnt/volume"
