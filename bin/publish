@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+if [ -z "$FLY_AUTH_TOKEN" ]; then
+  echo "FLY_AUTH_TOKEN is not set. Please set it and try again."
+  exit 1
+fi
+
+skopeo \
+  # Remove the need for a policy file since we only need this for a one off thing
+  --insecure-policy \
+  copy \
+  # The source argument, which is a docker image archive at `./result`
+  docker-archive:./result \
+  # The destination argument, the `build.image` value from your fly.toml
+  docker://registry.fly.io/surf-journal:latest \
+  # Injecting the previously generated credentials
+  --dest-creds x:"$FLY_AUTH_TOKEN" \
+  # Docker v2.2 manifest format: https://containers.gitbook.io/build-containers-the-hard-way#registry-format-oci-image-manifest
+  # Probably not necessary but I just wanted to be sure
+  --format v2s2
