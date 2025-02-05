@@ -94,7 +94,10 @@
       };
 
       container = pkgs.dockerTools.buildImage {
-        name = "surf-journal";
+        name = "registry.fly.io/surf-journal";
+        tag = "latest";
+        # This removes reproducibility
+        created = "now";
         runAsRoot = ''
           # Expects this folder to exist for checking jemalloc
           mkdir -p /usr/lib
@@ -152,6 +155,7 @@
           buildInputs = [
             bundix.packages.${system}.default
             flyctl
+            skopeo
           ];
           inputsFrom = [
             packages.${system}.default
