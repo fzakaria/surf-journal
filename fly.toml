@@ -3,7 +3,7 @@ primary_region = "sjc"
 
 [env]
   DATABASE_URL = "sqlite3:///mnt/volume/production.sqlite3"
-  RAILS_ENV = "development"
+  RAILS_ENV = "production"
 
 [mounts]
   source = "sqlite3_volume"
