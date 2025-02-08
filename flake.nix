@@ -74,8 +74,8 @@
         env = {
           RAILS_ENV = "production";
         };
-        buildInputs = with pkgs; [
-          gemsets.${system}.env
+        buildInputs = [
+          gemsets.${system}.envMinimal
           gemsets.${system}.ruby
         ];
         buildPhase = ''
@@ -95,12 +95,7 @@
 
       container = pkgs.dockerTools.buildImage {
         name = "registry.fly.io/surf-journal";
-        tag = "latest";
-        # This removes reproducibility
-        created = "now";
         runAsRoot = ''
-          # Expects this folder to exist for checking jemalloc
-          mkdir -p /usr/lib
         '';
         copyToRoot = with pkgs.dockerTools; [
           (pkgs.buildEnv {
@@ -109,23 +104,35 @@
             paths = with pkgs; [
               coreutils
               findutils
+              bashInteractive
+              binSh
+            ];
+          })
+          (pkgs.buildEnv {
+            name = "journal-env";
+            # The cache is pretty large so let's
+            pathsToLink = ["/"];
+            extraPrefix = "/surf-journal";
+            paths = [
+              # Everything seems to assume that the application is in the root lots of relative
+              # paths
+              default
             ];
           })
           # This provides the env utility at /usr/bin/env.
           usrBinEnv
-          # This provides bashInteractive at /bin/sh.
-          binSh
           # This sets up /etc/ssl/certs/ca-certificates.crt.
           caCertificates
           # Provides /etc/passwd and /etc/group that contain root and nobody.
           # Useful when packaging binaries that insist on using nss to look up username/groups
           fakeNss
-          # Everything seems to assume that the application is in the root lots of relative
-          # paths
-          default
         ];
+        # This ensures symlinks to directories are preserved in the image
+        keepContentsDirlinks = true;
         config = {
+          WorkingDir = "/surf-journal";
           Env = [
+            "RAILS_ROOT=/surf-journal"
             "RAILS_ENV=production"
             # Enable jemalloc for reduced memory usage and latency.
             "LD_PRELOAD=${pkgs.jemalloc}/lib/libjemalloc.so"
@@ -133,16 +140,9 @@
           Cmd = ["./bin/thrust" "./bin/rails" "server"];
           Entrypoint = ["${default}/bin/docker-entrypoint"];
           ExposedPorts = {
-            "3000/tcp" = {};
+            "80/tcp" = {};
           };
         };
-      };
-    });
-
-    apps = eachSystem ({system, ...}: {
-      default = {
-        type = "app";
-        program = "${packages.${system}.default}/bin/dev";
       };
     });
 

@@ -1,5 +1,5 @@
 
-<%= form_with url: session_url, class: "card flex flex-col gap" do |form| %>
+<%= form_with model: @user, url: registration_url, class: "card flex flex-col gap" do |form| %>
   <div class="flex flex-col gap-half">
     <h3 class="font-semibold leading-none">Register</h3>
     <p class="text-sm text-subtle">Enter your email & password below to create to your account.</p>

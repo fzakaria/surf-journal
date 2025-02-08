@@ -23,5 +23,12 @@ module SurfJournal
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # FIXME: I would like to just have the root workout normally
+    # but I am symlinking the content so it seems to expand to /nix/store
+    # and fail to make the sqlite db
+    if ENV["RAILS_ROOT"].present?
+      config.root = Pathname.new(ENV["RAILS_ROOT"])
+    end
   end
 end
