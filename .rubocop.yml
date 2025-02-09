@@ -1,3 +1,10 @@
+AllCops:
+  # https://docs.rubocop.org/rubocop/1.27/configuration.html#pre-processing
+  Exclude:
+  <% `git status --ignored --porcelain`.lines.grep(/^!! /).each do |path| %>
+    - <%= path.sub(/^!! /, '') %>
+  <% end %>
+
 # Omakase Ruby styling for Rails
 inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
