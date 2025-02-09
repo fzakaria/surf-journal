@@ -1,24 +1,35 @@
-# README
+# Surf Journal
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+> [https://surf-journal.fly.dev/](https://surf-journal.fly.dev/)
 
-Things you may want to cover:
+[![built with nix](https://builtwithnix.org/badge.svg)](https://builtwithnix.org)
+![github master branch workflow](https://github.com/fzakaria/surf-journal/actions/workflows/ci.yml/badge.svg?branch=main)
 
-* Ruby version
+_A ** WIP ** simple website to log surf sessions and view interesting statistics_.
 
-* System dependencies
+## Development
 
-* Configuration
+### Setup
+This codebase is primarily built with [Nix](https://nixos.org/) but it should work on non-NixOS machines (it is tested as such on GitHub CI).
 
-* Database creation
+If you are using Nix, you should be all set bu running `nix develop` (or using [direnv](https://direnv.net/)).
 
-* Database initialization
+Otherwise simply run `./bin/setup`
 
-* How to run the test suite
+### Deployment
 
-* Services (job queues, cache servers, search engines, etc.)
+Deployment happens to [Fly.io](https://fly.io/) automatically via GitHub but you can also deploy locally.
 
-* Deployment instructions
+Build the container locally.
+```sh
+nix build ".#container"
 
-* ...
+# you can test it via the following:
+# load the OCI image
+docker load < ./result
+
+# run the container!
+docker run -p 3000:80 -it -e "RAILS_ENV=development" -e "RAILS_MASTER_KEY=$(cat ./config/master.key)" registry.fly.io/surf-journal:$LATEST_HASH
+```
+
+> You can optionally mount a local volume if you want to persist the SQLite database used.
