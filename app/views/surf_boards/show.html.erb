@@ -1,0 +1,21 @@
+<div class="board-card">
+  <div class="header-container">
+    <%= link_to surf_boards_path, class: "back-btn" do %>
+      <i class="fas fa-chevron-left"></i>
+    <% end %>
+    <h1 class="board-title"><%= @surf_board.name %></h1>
+  </div>
+
+  <div class="board-details">
+    <div class="detail-item"><strong>Type:</strong> <%= @surf_board.board_type %></div>
+    <div class="detail-item"><strong>Length:</strong> <%= @surf_board.length %> ft</div>
+    <div class="detail-item"><strong>Width:</strong> <%= @surf_board.width %> inches</div>
+    <div class="detail-item"><strong>Thickness:</strong> <%= @surf_board.thickness %> inches</div>
+    <div class="detail-item"><strong>Volume:</strong> <%= @surf_board.volume %> L</div>
+    <div class="detail-item"><strong>Fin Setup:</strong> <%= @surf_board.fin_setup %></div>
+    <div class="detail-item"><strong>Brand:</strong> <%= @surf_board.brand %></div>
+    <% if @surf_board.notes.present? %>
+      <div class="detail-item"><strong>Notes:</strong> <%= @surf_board.notes %></div>
+    <% end %>
+  </div>
+</div>

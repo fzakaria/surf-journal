@@ -1,0 +1,41 @@
+<%= form_with model: @surf_board do |f| %>
+  <p>
+    <%= f.text_field :name, placeholder: "Name", class: "board-input" %>
+  </p>
+
+  <p>
+    <%= f.text_field :board_type, placeholder: "Board Type", class: "board-input" %>
+  </p>
+
+  <p>
+    <%= f.number_field :length, step: 0.1, placeholder: "Length (ft)", class: "board-input" %>
+  </p>
+
+  <p>
+    <%= f.number_field :width, step: 0.1, placeholder: "Width (inches)", class: "board-input" %>
+  </p>
+
+  <p>
+    <%= f.number_field :thickness, step: 0.1, placeholder: "Thickness (inches)", class: "board-input" %>
+  </p>
+
+  <p>
+    <%= f.number_field :volume, step: 0.1, placeholder: "Volume (liters)", class: "board-input" %>
+  </p>
+
+  <p>
+    <%= f.text_field :fin_setup, placeholder: "Fin Setup", class: "board-input" %>
+  </p>
+
+  <p>
+    <%= f.text_field :brand, placeholder: "Brand", class: "board-input" %>
+  </p>
+
+  <p>
+    <%= f.text_area :notes, placeholder: "Notes", class: "board-input" %>
+  </p>
+
+  <p>
+    <%= f.submit "Save Surfboard", class: "board-btn" %>
+  </p>
+<% end %>
