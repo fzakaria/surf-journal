@@ -1,0 +1,26 @@
+<div style="display: flex; justify-content: space-between; margin: 1rem 0;">
+  <div>
+    <h1 class="font-semibold leading-none">Surf Boards</h1>
+  </div>
+  <div>
+    <%= link_to 'New Surfboard', new_surf_board_path, class: "btn" %>
+  </div>
+</div>
+
+<ul>
+  <% @surf_boards.each do |board| %>
+    <li class="card flex justify-between items-center">
+      <%= link_to board.name, surf_board_path(board) %>
+
+      <div class="flex gap-4">
+        <%= link_to edit_surf_board_path(board), class: "text-blue-500 hover:text-blue-700 m-2" do %>
+          <i class="fas fa-edit"></i>
+        <% end %>
+
+        <%= link_to surf_board_path(board), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-500 hover:text-red-700 m-2" do %>
+          <i class="fas fa-trash-alt"></i>
+        <% end %>
+      </div>
+    </li>
+  <% end %>
+</ul>

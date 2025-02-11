@@ -67,3 +67,9 @@
   overflow: auto;
   padding: var(--size-4);
 }
+
+
+#main {
+  scrollbar-width: none;
+}
+
