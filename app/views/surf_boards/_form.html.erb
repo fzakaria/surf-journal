@@ -1,41 +1,82 @@
-<%= form_with model: @surf_board do |f| %>
+<%= form_with(model: @surf_board, local: true, html: { multipart: true }) do |f| %>
   <p>
-    <%= f.text_field :name, placeholder: "Name", class: "board-input" %>
+    <%= f.text_field :name, placeholder: "Name", class: "board-input" , required: true  %>
   </p>
 
   <p>
-    <%= f.text_field :board_type, placeholder: "Board Type", class: "board-input" %>
+    <%= f.text_field :board_type, placeholder: "Board Type", class: "board-input" , required: true %>
   </p>
 
   <p>
-    <%= f.number_field :length, step: 0.1, placeholder: "Length (ft)", class: "board-input" %>
+    <%= f.number_field :length, step: 0.1, placeholder: "Length (ft)", class: "board-input" , required: true %>
   </p>
 
   <p>
-    <%= f.number_field :width, step: 0.1, placeholder: "Width (inches)", class: "board-input" %>
+    <%= f.number_field :width, step: 0.1, placeholder: "Width (inches)", class: "board-input" , required: true %>
   </p>
 
   <p>
-    <%= f.number_field :thickness, step: 0.1, placeholder: "Thickness (inches)", class: "board-input" %>
+    <%= f.number_field :thickness, step: 0.1, placeholder: "Thickness (inches)", class: "board-input" , required: true %>
   </p>
 
   <p>
-    <%= f.number_field :volume, step: 0.1, placeholder: "Volume (liters)", class: "board-input" %>
+    <%= f.number_field :volume, step: 0.1, placeholder: "Volume (liters)", class: "board-input" , required: true %>
   </p>
 
   <p>
-    <%= f.text_field :fin_setup, placeholder: "Fin Setup", class: "board-input" %>
+    <%= f.text_field :fin_setup, placeholder: "Fin Setup", class: "board-input" , required: true %>
   </p>
 
   <p>
-    <%= f.text_field :brand, placeholder: "Brand", class: "board-input" %>
+    <%= f.text_field :brand, placeholder: "Brand", class: "board-input" , required: true %>
   </p>
 
   <p>
-    <%= f.text_area :notes, placeholder: "Notes", class: "board-input" %>
+    <%= f.text_area :notes, placeholder: "Notes", class: "board-input" , required: true %>
   </p>
+  <%= f.label :image, "Upload Surfboard Image", class: "image-label" %>
+  <div class="form-group image-upload">
+    <% if @surf_board.persisted? && @surf_board.image.attached? %>
+      <img id="image-preview" src="<%= url_for(@surf_board.image) %>" alt="Surfboard Image" class="board-image">
+    <% else %>
+      <i class="fas fa-upload upload-icon"></i>
+      <img id="image-preview" class="hidden" alt="Image Preview">
+    <% end %>
+
+    <%= f.file_field :image, class: "image-input", accept: "image/*", onchange: "previewImage(event)" %>
+  </div>
 
   <p>
     <%= f.submit "Save Surfboard", class: "board-btn" %>
   </p>
+
 <% end %>
+
+<script>
+function previewImage(event) {
+  var input = event.target;
+  var imagePreview = document.getElementById("image-preview");
+  var icon = document.querySelector(".upload-icon");
+
+  if (!imagePreview) {
+    console.error("Image preview element not found.");
+    return; // Prevent errors if the element is missing
+  }
+
+  if (icon) icon.style.display = "none"; // Hide upload icon
+
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      imagePreview.src = e.target.result;
+      imagePreview.style.display = "block";
+      imagePreview.classList.add("board-image");
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+
+</script>

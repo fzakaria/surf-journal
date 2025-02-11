@@ -6,16 +6,25 @@
     <h1 class="board-title"><%= @surf_board.name %></h1>
   </div>
 
-  <div class="board-details">
-    <div class="detail-item"><strong>Type:</strong> <%= @surf_board.board_type %></div>
-    <div class="detail-item"><strong>Length:</strong> <%= @surf_board.length %> ft</div>
-    <div class="detail-item"><strong>Width:</strong> <%= @surf_board.width %> inches</div>
-    <div class="detail-item"><strong>Thickness:</strong> <%= @surf_board.thickness %> inches</div>
-    <div class="detail-item"><strong>Volume:</strong> <%= @surf_board.volume %> L</div>
-    <div class="detail-item"><strong>Fin Setup:</strong> <%= @surf_board.fin_setup %></div>
-    <div class="detail-item"><strong>Brand:</strong> <%= @surf_board.brand %></div>
-    <% if @surf_board.notes.present? %>
-      <div class="detail-item"><strong>Notes:</strong> <%= @surf_board.notes %></div>
-    <% end %>
+  <div class="board-content">
+    <div class="board-image">
+      <% if @surf_board.image.attached? %>
+        <%= image_tag @surf_board.image, alt: "Surfboard Image", class: "surfboard-img" %>
+      <% else %>
+        <p>No image available</p>
+      <% end %>
+    </div>
+
+    <div class="board-details">
+      <div class="detail-item"><strong>Type:</strong> <%= @surf_board.board_type %></div>
+      <div class="detail-item"><strong>Length:</strong> <%= @surf_board.length %> ft</div>
+      <div class="detail-item"><strong>Width:</strong> <%= @surf_board.width %> inches</div>
+      <div class="detail-item"><strong>Thickness:</strong> <%= @surf_board.thickness %> inches</div>
+      <div class="detail-item"><strong>Volume:</strong> <%= @surf_board.volume %> L</div>
+      <div class="detail-item"><strong>Fin Setup:</strong> <%= @surf_board.fin_setup %></div>
+      <% if @surf_board.notes.present? %>
+        <div class="detail-item"><strong>Notes:</strong> <%= @surf_board.notes %></div>
+      <% end %>
+    </div>
   </div>
 </div>

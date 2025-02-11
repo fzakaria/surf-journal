@@ -46,6 +46,6 @@ class SurfBoardsController < ApplicationController
   end
 
   def surf_board_params
-    params.require(:surf_board).permit(:name, :board_type, :length, :width, :thickness, :volume, :fin_setup, :brand, :notes)
+    params.require(:surf_board).permit(:name, :board_type, :length, :width, :thickness, :volume, :fin_setup, :brand, :notes , :image)
   end
 end
