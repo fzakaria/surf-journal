@@ -1,9 +1,11 @@
 package internal
 
 import (
+	"html/template"
+	"log"
 	"net/http"
 
-	"github.com/fzakaria/surf-journal/templates"
+	surf_journal "github.com/fzakaria/surf-journal"
 	"github.com/gorilla/sessions"
 )
 
@@ -34,14 +36,39 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templates.Layout("Login", templates.LoginPage()).Render(r.Context(), w)
+	tmpls, err := template.ParseFS(surf_journal.TemplateFS,
+		"templates/base.html.tmpl",
+		"templates/nav.html.tmpl",
+		"templates/login.html.tmpl")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = tmpls.ExecuteTemplate(w, "base", nil)
+	if err != nil {
+		log.Println("Template execution error:", err)
+	}
 }
 
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "auth-session")
 	username, _ := session.Values["username"].(string)
+	tmpls, err := template.ParseFS(surf_journal.TemplateFS,
+		"templates/base.html.tmpl",
+		"templates/nav.html.tmpl",
+		"templates/home.html.tmpl")
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 
-	templates.IndexPage(username).Render(r.Context(), w)
+	data := struct {
+		UserName string
+	}{
+		UserName: username,
+	}
+
+	tmpls.ExecuteTemplate(w, "base", data)
 }
 
 func AuthMiddleware(next http.Handler) http.Handler {

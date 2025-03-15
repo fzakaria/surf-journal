@@ -1,6 +1,10 @@
 {{define "nav"}}
  <nav>
     <a href='/'>Home</a>
-    <a href='/logout'>Logout</a>
+    {{if .UserName}}
+    <form action="/logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
+    {{end}}
 </nav>
 {{end}}
