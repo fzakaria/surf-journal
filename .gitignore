@@ -17,3 +17,6 @@ result
 *.sqlite
 
 .direnv/
+
+# tailwind
+static/css/output.css
