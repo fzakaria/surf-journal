@@ -1,10 +1,17 @@
 {{define "nav"}}
  <nav>
-    <a href='/'>Home</a>
-    {{if .UserName}}
-    <form action="/logout" method="post">
-        <button type="submit">Logout</button>
-    </form>
-    {{end}}
+    <ul>
+        <li><h2>Surf Journal</h2></li>
+    </ul>
+    <ul>
+        <li><a href='/' aria-current="page">Home</a></li>
+        {{if .UserName}}
+        <li>
+            <form action="/logout" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </li>
+        {{end}}
+    </ul>
 </nav>
 {{end}}

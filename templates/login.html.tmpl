@@ -1,13 +1,16 @@
 {{define "main"}}
-  <div class="bg-white shadow rounded-lg px-8 py-6">
-    <h2 class="text-xl font-semibold mb-4">Login</h2>
+  <div style="max-width: 800px; margin: auto;">
+    <hgroup>
+      <h3>Login</h3>
+      <p>Welcome back, please login to your account.</p>
+    </hgroup>
     <form method="post">
-      <input type="text" name="username" placeholder="Username" required
-             class="w-full mb-3 px-4 py-2 border rounded"/>
-      <input type="password" name="password" placeholder="Password" required
-             class="w-full mb-3 px-4 py-2 border rounded"/>
-      <button type="submit"
-              class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+      <fieldset>
+        <input type="email" name="username" placeholder="Email" required />
+        <small id="email-helper">We'll never share your email with anyone else.</small>
+        <input type="password" name="password" placeholder="Password" required />
+      </fieldset>
+      <button type="submit">
         Login
       </button>
     </form>

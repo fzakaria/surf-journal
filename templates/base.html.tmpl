@@ -4,16 +4,28 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="light dark">
   <title>Surf Journal</title>
   <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
-  <link href="/static/css/output.css" rel="stylesheet">
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+  >
 </head>
-<body class="bg-gray-100 flex justify-center items-center min-h-screen">
-  <main class="w-full max-w-2xl mx-auto">
-    {{template "nav" .}}
-
-    {{template "main" .}}
-    <footer>Made with love.</footer>
+<body>
+  <main class="container">
+    <header>
+      {{template "nav" .}}
+    </header>
+    <section>
+      <main>
+          {{template "main" .}}
+      </main>
+    </section>
+    <hr>
+    <section>
+      <footer>Made with love.</footer>
+    </section>
   </main>
 </body>
 </html>
