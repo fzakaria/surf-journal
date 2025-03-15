@@ -15,6 +15,7 @@ func AuthenticationRouter() http.Handler {
 	r := chi.NewRouter()
 	r.Get("/login", LoginHandler)
 	r.Post("/login", LoginHandler)
+	r.Get("/logout", LogoutHandler)
 	r.Post("/logout", LogoutHandler)
 	return r
 }

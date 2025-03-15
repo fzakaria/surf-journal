@@ -38,9 +38,11 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := struct {
-		UserName string
+		UserName    string
+		CurrentPage string
 	}{
-		UserName: username,
+		UserName:    username,
+		CurrentPage: "home",
 	}
 
 	err = tmpls.ExecuteTemplate(w, "base", data)

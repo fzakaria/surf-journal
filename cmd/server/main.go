@@ -26,6 +26,7 @@ func main() {
 	r.Group(func(auth chi.Router) {
 		auth.Use(handlers.AuthMiddleware)
 		auth.Get("/", handlers.HomeHandler)
+		auth.Mount("/sessions", handlers.SessionsResource{}.Routes())
 	})
 
 	r.NotFound(handlers.NotFoundHandler)
