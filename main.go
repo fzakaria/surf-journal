@@ -13,6 +13,9 @@ import (
 //go:embed static/*
 var staticFS embed.FS
 
+//go:embed templates/*
+var templatesFS embed.FS
+
 //go:generate tailwindcss -i ./static/css/input.css -o ./static/css/output.css
 
 func main() {

@@ -1,6 +1,4 @@
-package templates
-
-templ LoginForm() {
+{{define "main"}}
   <div class="bg-white shadow rounded-lg px-8 py-6">
     <h2 class="text-xl font-semibold mb-4">Login</h2>
     <form method="post">
@@ -15,7 +13,4 @@ templ LoginForm() {
     </form>
   </div>
 }
-
-templ LoginPage() {
-  @Layout("Login", LoginForm())
-}
+{{end}}
