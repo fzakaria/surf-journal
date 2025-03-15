@@ -5,24 +5,30 @@ import (
 	"net/http"
 
 	surf_journal "github.com/fzakaria/surf-journal"
-	"github.com/fzakaria/surf-journal/internal"
+	"github.com/fzakaria/surf-journal/database"
+	"github.com/fzakaria/surf-journal/handlers"
+	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 )
 
 func main() {
-	db := internal.ConnectDB()
+	db := database.Connect()
 	defer db.Close()
 
 	r := chi.NewRouter()
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 
-	r.Get("/login", internal.LoginHandler)
-	r.Post("/login", internal.LoginHandler)
-	r.Post("/logout", internal.LogoutHandler)
+	r.Mount("/", handlers.AuthenticationRouter())
 
 	r.Group(func(auth chi.Router) {
-		auth.Use(internal.AuthMiddleware)
-		auth.Get("/", internal.HomeHandler)
+		auth.Use(handlers.AuthMiddleware)
+		auth.Get("/", handlers.HomeHandler)
 	})
+
+	r.NotFound(handlers.NotFoundHandler)
 
 	staticServer := http.FileServer(http.FS(surf_journal.StaticFS))
 	r.Handle("/static/*", staticServer)

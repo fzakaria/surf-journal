@@ -1,15 +1,23 @@
-package internal
+package handlers
 
 import (
 	"html/template"
-	"log"
 	"net/http"
 
 	surf_journal "github.com/fzakaria/surf-journal"
+	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/sessions"
 )
 
 var store = sessions.NewCookieStore([]byte("your-very-secret-key"))
+
+func AuthenticationRouter() http.Handler {
+	r := chi.NewRouter()
+	r.Get("/login", LoginHandler)
+	r.Post("/login", LoginHandler)
+	r.Post("/logout", LogoutHandler)
+	return r
+}
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "auth-session")
@@ -41,34 +49,15 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		"templates/nav.html.tmpl",
 		"templates/login.html.tmpl")
 	if err != nil {
-		log.Fatal(err)
+		ErrorHandler(w, r, err)
+		return
 	}
 
 	err = tmpls.ExecuteTemplate(w, "base", nil)
 	if err != nil {
-		log.Println("Template execution error:", err)
-	}
-}
-
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "auth-session")
-	username, _ := session.Values["username"].(string)
-	tmpls, err := template.ParseFS(surf_journal.TemplateFS,
-		"templates/base.html.tmpl",
-		"templates/nav.html.tmpl",
-		"templates/home.html.tmpl")
-	if err != nil {
-		log.Fatal(err)
+		ErrorHandler(w, r, err)
 		return
 	}
-
-	data := struct {
-		UserName string
-	}{
-		UserName: username,
-	}
-
-	tmpls.ExecuteTemplate(w, "base", data)
 }
 
 func AuthMiddleware(next http.Handler) http.Handler {

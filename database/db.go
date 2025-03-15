@@ -1,4 +1,4 @@
-package internal
+package database
 
 import (
 	"database/sql"
@@ -7,7 +7,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func ConnectDB() *sql.DB {
+func Connect() *sql.DB {
 	db, err := sql.Open("sqlite3", "db.sqlite")
 	if err != nil {
 		log.Fatal(err)
