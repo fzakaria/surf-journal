@@ -1,0 +1,21 @@
+package templates
+
+templ LoginForm() {
+  <div class="bg-white shadow rounded-lg px-8 py-6">
+    <h2 class="text-xl font-semibold mb-4">Login</h2>
+    <form method="post">
+      <input type="text" name="username" placeholder="Username" required
+             class="w-full mb-3 px-4 py-2 border rounded"/>
+      <input type="password" name="password" placeholder="Password" required
+             class="w-full mb-3 px-4 py-2 border rounded"/>
+      <button type="submit"
+              class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+        Login
+      </button>
+    </form>
+  </div>
+}
+
+templ LoginPage() {
+  @Layout("Login", LoginForm())
+}
