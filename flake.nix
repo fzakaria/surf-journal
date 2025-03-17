@@ -48,14 +48,23 @@
       default = pkgs.surf-journal;
     });
 
-    devShells = eachSystem ({pkgs, ...}: {
-      default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          (mkGoEnv {pwd = ./.;})
-          gomod2nix
-          unstable.tailwindcss_4
-        ];
-      };
-    });
+    devShells = eachSystem ({pkgs, ...}:
+      with pkgs; {
+        default = mkShell {
+          inputsFrom = [
+            surf-journal
+          ];
+
+          npmDeps = importNpmLock.buildNodeModules {
+            npmRoot = ./.;
+            inherit nodejs;
+          };
+
+          packages = [
+            (mkGoEnv {pwd = ./.;})
+            gomod2nix
+          ];
+        };
+      });
   };
 }

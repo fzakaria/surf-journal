@@ -1,0 +1,21 @@
+{
+  "name": "surf-journal",
+  "version": "1.0.0",
+  "description": "A simple website to log surf sessions.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fzakaria/surf-journal.git"
+  },
+  "author": "Farid Zakaria",
+  "bugs": {
+    "url": "https://github.com/fzakaria/surf-journal/issues"
+  },
+  "homepage": "https://github.com/fzakaria/surf-journal#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.0.14",
+    "daisyui": "^5.0.6",
+    "prettier": "^3.5.3",
+    "prettier-plugin-go-template": "^0.0.15",
+    "tailwindcss": "^4.0.14"
+  }
+}

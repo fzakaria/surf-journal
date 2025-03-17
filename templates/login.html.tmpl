@@ -1,4 +1,4 @@
-{{define "main"}}
+{{ define "main" }}
   <div class="tw:m-auto tw:max-w-96">
     <hgroup>
       <h3>Login</h3>
@@ -7,12 +7,17 @@
     <form method="post">
       <fieldset>
         <input type="email" name="username" placeholder="Email" required />
-        <small id="email-helper">We'll never share your email with anyone else.</small>
-        <input type="password" name="password" placeholder="Password" required />
+        <small id="email-helper"
+          >We'll never share your email with anyone else.</small
+        >
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
       </fieldset>
-      <button type="submit">
-        Login
-      </button>
+      <button type="submit">Login</button>
     </form>
   </div>
-{{end}}
+{{ end }}

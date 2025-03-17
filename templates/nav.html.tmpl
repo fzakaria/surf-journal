@@ -1,29 +1,26 @@
-{{define "nav"}}
- <nav>
+{{ define "nav" }}
+  <nav>
     <ul>
-        <li><h2>Surf Journal</h2></li>
+      <li><h2>Surf Journal</h2></li>
     </ul>
     <ul>
-        <li><a href='/'>Home</a></li>
-        <li><a href='/sessions' >Sessions</a></li>
-        <li><a href='/boards'>Boards</a></li>
-        {{if .UserName}}
+      <li><a href="/">Home</a></li>
+      <li><a href="/sessions">Sessions</a></li>
+      <li><a href="/boards">Boards</a></li>
+      {{ if .UserName }}
         <li>
-        <details class="dropdown">
-            <summary>
-            Account
-            </summary>
+          <details class="dropdown">
+            <summary>Account</summary>
             <ul dir="rtl">
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Security</a></li>
-            <li><a href="/logout">Logout</a></li>
+              <li><a href="#">Profile</a></li>
+              <li><a href="#">Settings</a></li>
+              <li><a href="#">Security</a></li>
+              <li><a href="/logout">Logout</a></li>
             </ul>
-        </details>
+          </details>
         </li>
-        <li>
-        </li>
-        {{end}}
+        <li></li>
+      {{ end }}
     </ul>
-</nav>
-{{end}}
+  </nav>
+{{ end }}

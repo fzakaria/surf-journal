@@ -3,6 +3,8 @@
   buildGoApplication,
   sqlite,
   lib,
+  importNpmLock,
+  nodejs,
 }: let
   fs = lib.fileset;
 in
@@ -28,6 +30,20 @@ in
           ./tailwind.config.js
         ]);
     };
+
+    preBuild = ''
+      go generate
+    '';
+
+    npmDeps = importNpmLock.buildNodeModules {
+      npmRoot = ./.;
+      inherit nodejs;
+    };
+
+    nativeBuildInputs = [
+      nodejs
+      importNpmLock.hooks.linkNodeModulesHook
+    ];
 
     buildInputs = [
       sqlite

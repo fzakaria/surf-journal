@@ -11,11 +11,11 @@ jobs:
       contents: read
       packages: write
     steps:
-    - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v30
-      with:
-        github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: "Nix build & validate"
-      run: |
-        nix fmt -- --check .
-        nix build
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v30
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Nix build & validate"
+        run: |
+          nix fmt -- --check .
+          nix build
