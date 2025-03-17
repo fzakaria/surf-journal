@@ -54,8 +54,7 @@ func GetSerializedPassword(db *sql.DB, username string) (string, error) {
 	return password, nil
 }
 
-func AddPassword(username, password string) error {
-	db := Connect()
+func AddPassword(db *sql.DB, username, password string) error {
 	_, err := db.Exec(`INSERT OR REPLACE INTO users
                        (username, password) VALUES (?, ?)`,
 		username,

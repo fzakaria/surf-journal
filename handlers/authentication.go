@@ -22,6 +22,8 @@ func AuthenticationRouter() http.Handler {
 	r.Post("/login", LoginHandler)
 	r.Get("/logout", LogoutHandler)
 	r.Post("/logout", LogoutHandler)
+	r.Get("/register", RegistrationHandler)
+	r.Post("/register", RegistrationHandler)
 	return r
 }
 
@@ -38,6 +40,65 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
+}
+
+func RegistrationHandler(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "auth-session")
+
+	if r.Method == "POST" {
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+
+		db, ok := r.Context().Value(dbKey).(*sql.DB)
+		if !ok {
+			ErrorHandler(w, r, fmt.Errorf("missing database"))
+			return
+		}
+
+		serialized, err := passwords.NewSerializedPassword(password)
+		if err != nil {
+			session.AddFlash("Could not hash password", "errors")
+			if err := session.Save(r, w); err != nil {
+				ErrorHandler(w, r, err)
+				return
+			}
+			http.Redirect(w, r, "/register", http.StatusSeeOther)
+			return
+		}
+
+		err = database.AddPassword(db, username, serialized)
+		if err != nil {
+			session.AddFlash("Could not create user", "errors")
+			if err := session.Save(r, w); err != nil {
+				ErrorHandler(w, r, err)
+				return
+			}
+			http.Redirect(w, r, "/register", http.StatusSeeOther)
+			return
+		}
+
+		session.Values["authenticated"] = true
+		session.Values["username"] = username
+		if err := session.Save(r, w); err != nil {
+			ErrorHandler(w, r, err)
+			return
+		}
+
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	tmpls, err := template.ParseFS(surf_journal.TemplateFS,
+		"templates/base.html.tmpl",
+		"templates/flash.html.tmpl",
+		"templates/nav.html.tmpl",
+		"templates/register.html.tmpl")
+	if err != nil {
+		ErrorHandler(w, r, err)
+		return
+	}
+
+	Render(tmpls, w, r, nil)
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {

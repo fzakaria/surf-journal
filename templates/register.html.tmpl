@@ -2,9 +2,9 @@
   <div class="flex min-h-full flex-col justify-center px-6 py-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <h2 class="text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-        Login
+        Register
       </h2>
-      <p class="text-center">Welcome back, please login to your account.</p>
+      <p class="text-center">Create a new account to get started.</p>
     </div>
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
       <form method="post">
@@ -12,29 +12,36 @@
           class="m-auto fieldset w-xs border border-base-300 p-4 rounded-box"
         >
           <input
-            type="email"
+            type="username"
             name="username"
             class="input"
-            placeholder="Email"
+            placeholder="Username"
             required
           />
-          <p class="fieldset-label">
-            We'll never share your email with anyone else.
-          </p>
           <input
             type="password"
             name="password"
+            id="password"
             class="input"
             placeholder="Password"
             required
           />
-          <button class="btn btn-neutral mt-4" type="submit">Login</button>
+          <input
+            type="password"
+            name="confirm_password"
+            id="confirm_password"
+            class="input"
+            placeholder="Confirm Password"
+            required
+            oninput="this.setCustomValidity(this.value !== document.getElementById('password').value ? 'Passwords do not match.' : '')"
+          />
+          <button class="btn btn-neutral mt-4" type="submit">Register</button>
           <p class="mt-3 text-sm font-light text-gray-500 dark:text-gray-400">
-            Don’t have an account yet?
+            Already have an account?
             <a
-              href="/register"
+              href="/login"
               class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-              >Sign up</a
+              >Login</a
             >
           </p>
         </fieldset>

@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/fzakaria/surf-journal/database"
 	"github.com/fzakaria/surf-journal/passwords"
 	"golang.org/x/term"
-	"os"
 )
 
 func main() {
@@ -25,7 +26,9 @@ func main() {
 		panic(err)
 	}
 
-	err = database.AddPassword(username, serialized)
+	db := database.Connect()
+
+	err = database.AddPassword(db, username, serialized)
 	if err != nil {
 		panic(err)
 	}
