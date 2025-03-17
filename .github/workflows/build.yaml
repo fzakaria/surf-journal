@@ -15,7 +15,10 @@ jobs:
       - uses: cachix/install-nix-action@v30
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Nix build & validate"
+      - name: "Linting"
         run: |
           nix fmt -- --check .
+          nix develop --command npx prettier --check .
+      - name: "Nix build"
+        run: |
           nix build
