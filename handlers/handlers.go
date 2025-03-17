@@ -9,6 +9,9 @@ import (
 )
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "auth-session")
+	username, _ := session.Values["username"].(string)
+
 	tmpls, err := template.ParseFS(surf_journal.TemplateFS,
 		"templates/base.html.tmpl",
 		"templates/flash.html.tmpl",
@@ -19,7 +22,12 @@ func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Render(tmpls, w, r, nil)
+	data := map[string]interface{}{
+		"UserName":    username,
+		"CurrentPage": "home",
+	}
+
+	Render(tmpls, w, r, data)
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {

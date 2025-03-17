@@ -27,7 +27,6 @@ in
           ./cmd
           ./go.mod
           ./go.sum
-          ./tailwind.config.js
         ]);
     };
 
