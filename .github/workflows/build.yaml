@@ -1,0 +1,21 @@
+name: "Nix build"
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+jobs:
+  nix-validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v30
+      with:
+        github_access_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: "Nix build & validate"
+      run: |
+        nix fmt -- --check .
+        nix build
