@@ -21,6 +21,10 @@
     {{template "nav" .}}
     <section>
       <main>
+          {{range .errors}}
+            {{template "flash" .}}
+          {{end}}
+
           {{template "main" .}}
       </main>
     </section>
