@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"log"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 func Connect() *sql.DB {
-	db, err := sql.Open("sqlite3", "db.sqlite")
+	db, err := sql.Open("sqlite", "db.sqlite")
 	if err != nil {
 		log.Fatal(err)
 	}
