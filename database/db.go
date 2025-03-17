@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -25,4 +26,36 @@ func Connect() *sql.DB {
 		log.Fatal(err)
 	}
 	return db
+}
+
+func GetSerializedPassword(db *sql.DB, username string) (string, error) {
+	rows, err := db.Query(`SELECT password FROM users WHERE username = ?`, username)
+	if err != nil {
+		return "", fmt.Errorf("error selecting password for username: %w", err)
+	}
+
+	defer rows.Close()
+
+	if !rows.Next() {
+		return "", nil
+	}
+
+	var password string
+
+	err = rows.Scan(&password)
+	if err != nil {
+		return "", fmt.Errorf("error retrieving password for username: %w", err)
+	}
+
+	return password, nil
+}
+
+func AddPassword(username, password string) error {
+	db := Connect()
+	_, err := db.Exec(`INSERT OR REPLACE INTO users
+                       (username, password) VALUES (?, ?)`,
+		username,
+		password,
+	)
+	return err
 }

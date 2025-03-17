@@ -5,21 +5,18 @@ import (
 	"net/http"
 
 	surf_journal "github.com/fzakaria/surf-journal"
-	"github.com/fzakaria/surf-journal/database"
 	"github.com/fzakaria/surf-journal/handlers"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 )
 
 func main() {
-	db := database.Connect()
-	defer db.Close()
-
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(handlers.DatabaseMiddleware)
 
 	r.Mount("/", handlers.AuthenticationRouter())
 
