@@ -3,8 +3,8 @@ package handlers
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 
 	surf_journal "github.com/fzakaria/surf-journal"
@@ -32,7 +32,10 @@ const dbKey contextKey = "db"
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "auth-session")
 	session.Values["authenticated"] = false
-	session.Save(r, w)
+	if err := session.Save(r, w); err != nil {
+		ErrorHandler(w, r, err)
+		return
+	}
 
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
@@ -46,34 +49,38 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 		db, ok := r.Context().Value(dbKey).(*sql.DB)
 		if !ok {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			log.Print("login/ missing database")
+			ErrorHandler(w, r, fmt.Errorf("missing database"))
 			return
 		}
 
 		serialized, err := database.GetSerializedPassword(db, username)
-		if err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			log.Printf("login/ GetSerializedPassword: %+v", err)
-			return
-		}
-
-		if len(serialized) == 0 {
-			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
-			log.Printf("login/ unknown user %s", username)
+		if len(serialized) == 0 || err != nil {
+			session.AddFlash(fmt.Sprintf("Could not find user %s", username), "errors")
+			if err := session.Save(r, w); err != nil {
+				ErrorHandler(w, r, err)
+				return
+			}
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
 
 		err = passwords.CheckPassword(serialized, password)
 		if err != nil {
-			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
-			log.Printf("login/ CheckPassword: %+v", err)
+			session.AddFlash("Password does not match", "errors")
+			if err := session.Save(r, w); err != nil {
+				ErrorHandler(w, r, err)
+				return
+			}
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
 
 		session.Values["authenticated"] = true
 		session.Values["username"] = username
-		session.Save(r, w)
+		if err := session.Save(r, w); err != nil {
+			ErrorHandler(w, r, err)
+			return
+		}
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -81,6 +88,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpls, err := template.ParseFS(surf_journal.TemplateFS,
 		"templates/base.html.tmpl",
+		"templates/flash.html.tmpl",
 		"templates/nav.html.tmpl",
 		"templates/login.html.tmpl")
 	if err != nil {
@@ -88,11 +96,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = tmpls.ExecuteTemplate(w, "base", nil)
-	if err != nil {
-		ErrorHandler(w, r, err)
-		return
-	}
+	Render(tmpls, w, r, nil)
 }
 
 func DatabaseMiddleware(next http.Handler) http.Handler {

@@ -23,6 +23,7 @@ func (rs SessionsResource) List(w http.ResponseWriter, r *http.Request) {
 	username, _ := session.Values["username"].(string)
 	tmpls, err := template.ParseFS(surf_journal.TemplateFS,
 		"templates/base.html.tmpl",
+		"templates/flash.html.tmpl",
 		"templates/nav.html.tmpl",
 		"templates/sessions/index.html.tmpl")
 	if err != nil {
@@ -30,17 +31,10 @@ func (rs SessionsResource) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := struct {
-		UserName    string
-		CurrentPage string
-	}{
-		UserName:    username,
-		CurrentPage: "sessions",
+	data := map[string]interface{}{
+		"UserName":    username,
+		"CurrentPage": "sessions",
 	}
 
-	err = tmpls.ExecuteTemplate(w, "base", data)
-	if err != nil {
-		ErrorHandler(w, r, err)
-		return
-	}
+	Render(tmpls, w, r, data)
 }

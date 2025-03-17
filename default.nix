@@ -1,6 +1,7 @@
 {
   version,
   buildGoApplication,
+  sqlite,
   lib,
 }: let
   fs = lib.fileset;
@@ -27,5 +28,19 @@ in
           ./tailwind.config.js
         ]);
     };
+
+    buildInputs = [
+      sqlite
+    ];
+
     modules = ./gomod2nix.toml;
+
+    tags = ["libsqlite3"];
+
+    meta = {
+      description = "A simple site to log surf sessions.";
+      homepage = "https://github.com/fzakaria/surf-journal";
+      changelog = "https://github.com/lxc/incus/releases/tag/v${version}";
+      mainProgram = "server";
+    };
   }

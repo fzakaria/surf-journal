@@ -47,6 +47,10 @@ func GetSerializedPassword(db *sql.DB, username string) (string, error) {
 		return "", fmt.Errorf("error retrieving password for username: %w", err)
 	}
 
+	if len(password) == 0 {
+		return "", fmt.Errorf("password for username is empty")
+	}
+
 	return password, nil
 }
 
