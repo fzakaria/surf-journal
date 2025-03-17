@@ -1,6 +1,6 @@
 {{ define "base" }}
   <!doctype html>
-  <html lang="en">
+  <html lang="en" class="h-full bg-white">
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,29 +11,29 @@
         integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
         crossorigin="anonymous"
       ></script>
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-      />
       <link rel="stylesheet" href="/static/css/tailwind.css" />
     </head>
-    <body>
-      <main class="container">
+    <body class="h-full">
+      <div
+        class="min-h-full flex flex-col m-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+      >
         {{ template "nav" . }}
-        <section>
-          <main>
-            {{ range .errors }}
-              {{ template "flash" . }}
-            {{ end }}
+        <div>
+          {{ range .errors }}
+            {{ template "flash" . }}
+          {{ end }}
 
-            {{ template "main" . }}
-          </main>
-        </section>
+          {{ template "main" . }}
+        </div>
         <hr />
-        <section>
-          <footer>Made with love.</footer>
-        </section>
-      </main>
+        <footer
+          class="footer sm:footer-horizontal footer-center bg-base-100 text-base-content p-4"
+        >
+          <aside>
+            <p>Made with love.</p>
+          </aside>
+        </footer>
+      </div>
     </body>
   </html>
 {{ end }}

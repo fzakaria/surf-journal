@@ -1,1 +1,4 @@
-@import "tailwindcss" prefix(tw);
+@import "tailwindcss";
+@plugin "daisyui" {
+  logs: true;
+}

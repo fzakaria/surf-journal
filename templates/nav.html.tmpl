@@ -1,26 +1,32 @@
 {{ define "nav" }}
-  <nav>
-    <ul>
-      <li><h2>Surf Journal</h2></li>
-    </ul>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/sessions">Sessions</a></li>
-      <li><a href="/boards">Boards</a></li>
-      {{ if .UserName }}
-        <li>
-          <details class="dropdown">
-            <summary>Account</summary>
-            <ul dir="rtl">
-              <li><a href="#">Profile</a></li>
-              <li><a href="#">Settings</a></li>
-              <li><a href="#">Security</a></li>
-              <li><a href="/logout">Logout</a></li>
-            </ul>
-          </details>
-        </li>
-        <li></li>
-      {{ end }}
-    </ul>
-  </nav>
+  <div class="navbar bg-base-100 shadow-sm">
+    <div class="flex-1">
+      <button class="btn btn-ghost">
+        <a
+          class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
+          href="/"
+          >Surf Journal</a
+        >
+      </button>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="/">Home</a></li>
+        <li><a href="/sessions">Sessions</a></li>
+        <li><a href="/boards">Boards</a></li>
+        {{ if .UserName }}
+          <li>
+            <details class="dropdown">
+              <summary>Account</summary>
+              <ul class="bg-base-100 rounded-t-none">
+                <li><a href="#">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+              </ul>
+            </details>
+          </li>
+          <li></li>
+        {{ end }}
+      </ul>
+    </div>
+  </div>
 {{ end }}
